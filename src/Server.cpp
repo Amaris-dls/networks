@@ -12,6 +12,9 @@ void Server::init() {
 }
 
 void Server::run() {
+    // Start a thread to handle input from the server console
+    std::thread input_thread([&] {input(); });
+    input_thread.detach();
     while (running) {
         sf::TcpSocket& c_sock = *connections.emplace_back(std::make_unique<sf::TcpSocket>());
 
@@ -21,5 +24,56 @@ void Server::run() {
             continue;
         }
         std::cout << "client connected @ " <<c_sock.getRemotePort() << std::endl;
+        //set up threads to listen to connected sockets constructed inside the workers vector
+        workers.emplace_back([&]{
+            listen(c_sock);
+            std::cout << "disconnect detected" << std::endl;
+            std::lock_guard<std::mutex> lck(mutex); // guard access to connection vector
+            for(int i = 0; i < connections.size(); i++){
+                if(connections[i]->getRemotePort() == c_sock.getRemotePort()){
+                    connections.erase(std::next(connections.begin(), i));
+                    break;
+                }
+            }
+        });
+    }
+
+}
+
+void Server::input(){
+    while(running){
+        std::string str;
+        std::getline(std::cin, str);
+        std::cin.clear();
+        std::lock_guard<std::mutex> lck(mutex);
+        for(std::unique_ptr<sf::TcpSocket>& connection : connections){
+            connection->send(reinterpret_cast<char*>(str.data()), str.length());
+        }
+    }
+}
+
+void Server::listen(sf::TcpSocket& c_socket){
+    bool continue_receiving = true;
+    char data[1028];
+    std::size_t received;
+    while(continue_receiving){
+        sf::Socket::Status status = c_socket.receive(data, 1028, received);
+        if(status == sf::Socket::Status::Disconnected){
+            continue_receiving = false;
+            std::cout << "Disconnected" << std::endl;
+        }
+        if(received < 1028){ data[received] = '\0'; }
+        relay(data, c_socket);
+        std::cout << reinterpret_cast<char*>(data) << std::endl;
+    }
+}
+
+void Server::relay(std::string buffer, sf::TcpSocket& c_socket){
+    char* message = reinterpret_cast<char*>(buffer.data());
+    std::lock_guard<std::mutex> lck(mutex);
+    for(std::unique_ptr<sf::TcpSocket>& connection : connections){
+        if(connection->getRemotePort() != c_socket.getRemotePort()){
+            connection->send(message, buffer.size());
+        }
     }
 }
