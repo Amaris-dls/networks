@@ -6,6 +6,7 @@
 #include <mutex>
 #include <memory>
 
+class Server {
 public:
 	void init();
 	void run();
@@ -19,3 +20,4 @@ private:
 	std::unique_ptr<sf::TcpListener> listener;
 	bool running = true;
 	std::mutex mutex;
+};

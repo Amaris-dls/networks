@@ -12,11 +12,13 @@ void Server::init() {
 }
 
 void Server::run() {
-	while (running) {
-		sf::TcpSocket& c_sock = *connections.emplace_back(std::make_unique<sf::TpSocket>());
-		if (listener->accept(c_sock) != sf::Socket::Status::Done) {
-			connections.pop_back();
-			std::cout << "connection failed on server side" << std::endl;
-		}
-	}
+    while (running) {
+        connections.emplace_back(std::make_unique<sf::TcpSocket>());
+        sf::TcpSocket& c_sock = *connections.back();
+
+        if (listener->accept(c_sock) != sf::Socket::Status::Done) {
+            connections.pop_back();
+            std::cout << "connection failed on server side" << std::endl;
+        }
+    }
 }
