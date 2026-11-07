@@ -7,6 +7,13 @@
 #include "Client.h"
 #include "Server.h"
 
+enum GameState {
+	MENU,
+	HOSTING,
+	JOINING,
+	PLAYING
+};
+
 class Game
 {
  public:
@@ -29,8 +36,10 @@ class Game
 	std::unique_ptr<Server> server;
 
 	sf::Font* font = nullptr;
-	sf::Text* host_game = nullptr;
-    sf::Text* join_game = nullptr;
+	sf::Text* host_button = nullptr;
+    sf::Text* join_button = nullptr;
+
+	GameState game_state;
 
 };
 
