@@ -71,6 +71,7 @@ void Game::mouseButtonPressed(const sf::Event::MouseButtonPressed* event)
         std::cout << "Connecting to server" << std::endl;
         client = std::make_unique<Client>();
         client->connect();
+        client->run();
     }
 }
 
