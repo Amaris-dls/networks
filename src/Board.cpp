@@ -31,7 +31,7 @@ void Board::init()
     }
 
     // Set up board sprite
-    board_texture = std::make_unique<sf::Texture>(sf::Texture("../Data/chess_board.png"));
+    board_texture = std::make_unique<sf::Texture>(sf::Texture("Data/chess_board.png"));
     board_sprite = std::make_unique<sf::Sprite>(*board_texture);
     board_sprite->setPosition({ grid_origin.x, grid_origin.y });
 
@@ -43,7 +43,7 @@ void Board::init()
 
 
     //Populate vectors of text to show board co-ordinate system
-    font = std::make_unique<sf::Font>("../Data/Fonts/OpenSans-Bold.ttf");
+    font = std::make_unique<sf::Font>("Data/Fonts/OpenSans-Bold.ttf");
     board_column_nums.reserve(grid_size.x);
     for (int i = 0; i < grid_size.x; i++)
     {
@@ -61,8 +61,8 @@ void Board::init()
 
     // Load piece textures, red then black, as RED is 0 and BLACK is 1
     piece_textures.reserve(2);
-    piece_textures.emplace_back(std::make_unique<sf::Texture>("../Data/red_piece.png"));
-    piece_textures.emplace_back(std::make_unique<sf::Texture>("../Data/black_piece.png"));
+    piece_textures.emplace_back(std::make_unique<sf::Texture>("Data/red_piece.png"));
+    piece_textures.emplace_back(std::make_unique<sf::Texture>("Data/black_piece.png"));
 
     // Sprite positions are calculated based on the sprite's origin (defaults at (0,0)). 
     // Variable below is the pixel location of the centre of the piece in the sprite, where we want to calculate positions from
