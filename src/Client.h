@@ -8,7 +8,7 @@
 class Client {
 
     public:
-        void connect();
+        bool connect();
         void input();
         void run(); 
         std::atomic<bool> running = false;

@@ -68,16 +68,17 @@ void Game::mouseButtonPressed(const sf::Event::MouseButtonPressed* event)
             });
            server_thread.detach();
         }
-    }
-    else if(join_button->getGlobalBounds().contains(sf::Vector2f(event->position))){
-        game_state = JOINING;
-        std::cout << "Connecting to server" << std::endl;
-        client = std::make_unique<Client>();
-        client->connect();
-        std::thread client_thread([&]() {
-            client->run();
-        });
-        client_thread.detach();
+        else if(join_button->getGlobalBounds().contains(sf::Vector2f(event->position))){
+            game_state = JOINING;
+            std::cout << "Connecting to server" << std::endl;
+            client = std::make_unique<Client>();
+            if (client->connect()) {
+                std::thread client_thread([&]() {
+                    client->run();
+            });
+            client_thread.detach();
+            }
+        }
     }
 }
 
