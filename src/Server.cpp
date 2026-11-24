@@ -1,6 +1,10 @@
 #include <iostream>
 #include "Server.h"
 
+Server::Server(std::shared_ptr<Board> _board) : board(_board) {
+
+}
+
 void Server::init() {
 
 	if (listener == nullptr) {
@@ -9,6 +13,15 @@ void Server::init() {
 	if (listener->listen(53000) != sf::Socket::Status::Done) {
 		std::cout << "couldnt bind listener to port 53" << std::endl;
 	}
+}
+sf::Packet Server::packData(std::string _string, sf::Vector2f _origin, sf::Vector2f _destination) const {
+    sf::Packet packet;
+    packet << _string << _origin.x << _origin.y << _destination.x << _destination.y;
+    return packet;
+}
+
+void Server::unpackData(sf::Packet _packet, std::string& _string, sf::Vector2f& _origin, sf::Vector2f& _destination) {
+    _packet >> _string >> _origin.y >> _destination.x >> _destination.y;
 }
 
 void Server::run() {

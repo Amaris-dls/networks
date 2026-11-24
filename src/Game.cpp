@@ -3,8 +3,7 @@
 #include "Tile.h"
 #include <iostream>
 
-Game::Game(sf::RenderWindow& game_window)
-  : window(game_window)
+Game::Game(sf::RenderWindow& game_window) : window(game_window)
 {
 }
 
@@ -21,7 +20,7 @@ bool Game::init()
     board->init();
 
     font = new sf::Font();
-    if (!font->openFromFile("Data/Fonts/OpenSans-Bold.ttf"))
+    if (!font->openFromFile("../Data/Fonts/OpenSans-Bold.ttf"))
     {
         std::cerr << "Failed to load font" << std::endl;
         delete font;

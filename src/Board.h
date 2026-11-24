@@ -21,7 +21,7 @@ public:
 	void mouseButtonReleased(const sf::Event::MouseButtonReleased* event);
 	void mouseMoved(const sf::Event::MouseMoved* event);
 	void endTurn();
-
+	void moveByCoords(sf::Vector2f _origin = { -1, -1 }, sf::Vector2f _destination = { -1, -1 }) const;
 private:
 	sf::RenderWindow& window;
 
